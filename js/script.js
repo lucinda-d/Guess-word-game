@@ -8,9 +8,27 @@ const remainingSpan = document.querySelector(".remaining span");
 const message = document.querySelector(".message");
 const playAgainButton = document.querySelector(".play-again");
 
-const word = "magnolia";
+let word = "magnolia";
 //this array will contain all the letters the player guesses.
 const attempts = [];
+let remainingGuesses = 8;
+
+////////////////////////////////////////////////////////
+//Add an async function (this fetches data from a file at the address below)
+const getWord = async function () {
+  const response = await fetch(
+    "https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt"
+  );
+  const words = await response.text();
+  //console log check here - don't forget to call the getWord function to view the result in the console.
+  // console.log(response);
+  const wordArray = words.split("\n");
+  // console.log(wordArray);
+  const randomWordPull = Math.floor(Math.random() * wordArray.length);
+  word = wordArray[randomWordPull].trim();
+  symbolUpdate(word);
+};
+getWord();
 
 //////////////////////////////////////////////////////
 //write a function to add placeholders for each letter
@@ -24,8 +42,6 @@ const symbolUpdate = function (word) {
   }
   inProgress.innerText = symbolArray.join("");
 };
-
-symbolUpdate(word);
 
 ///////////////////////////////////////////////////
 //Adding event listener for the button
@@ -78,6 +94,7 @@ const makeGuess = function (captureInput) {
   } else {
     attempts.push(captureInput);
     console.log(attempts);
+    attemptsLeft(captureInput);
     showGuesses();
     letterUpdate(attempts);
   }
@@ -111,6 +128,26 @@ const letterUpdate = function (attempts) {
   console.log(showLetter);
   inProgress.innerText = showLetter.join("");
   didTheyWin();
+};
+
+///////////////////////////////////////////////////
+//create a function to count guesses remaining
+const attemptsLeft = function (captureInput) {
+  const upperCaseWord = word.toUpperCase();
+  if (!upperCaseWord.includes(captureInput)) {
+    message.innerText = `Nice try. ${captureInput} is not in this word.`;
+    remainingGuesses -= 1;
+  } else {
+    message.innerText = `Well done! The letter ${captureInput} is in this word.`;
+  }
+
+  if (remainingGuesses === 0) {
+    message.innerText = `Game over! The word was ${word}.`;
+  } else if (remainingGuesses === 1) {
+    remainingSpan.innerText = `${remainingGuesses} guess`;
+  } else {
+    remainingSpan.innerText = `${remainingGuesses} guesses`;
+  }
 };
 
 //////////////////////////////////////////////////////
