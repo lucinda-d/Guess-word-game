@@ -9,88 +9,79 @@ const message = document.querySelector(".message");
 const playAgainButton = document.querySelector(".play-again");
 
 let word = "magnolia";
-//this array will contain all the letters the player guesses.
 const attempts = [];
 let remainingGuesses = 8;
 
-////////////////////////////////////////////////////////
-//Add an async function (this fetches data from a file at the address below)
+///Add an async function
+///function #8 - 4th page of instructions
 const getWord = async function () {
   const response = await fetch(
     "https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt"
   );
   const words = await response.text();
-  //console log check here - don't forget to call the getWord function to view the result in the console.
-  // console.log(response);
+  console.log(words);
+
   const wordArray = words.split("\n");
-  // console.log(wordArray);
+  console.log(wordArray);
+
   const randomWordPull = Math.floor(Math.random() * wordArray.length);
   word = wordArray[randomWordPull].trim();
   symbolUpdate(word);
 };
+
 getWord();
 
-//////////////////////////////////////////////////////
-//write a function to add placeholders for each letter
+///write a function to add placeholders for each letter
+///Function #1 - first page of instructions
 const symbolUpdate = function (word) {
-  //create array
   const symbolArray = [];
-  //create a for of loop
   for (const letter of word) {
     console.log(letter);
-    symbolArray.push("●");
+    symbolArray.push("☀️");
   }
   inProgress.innerText = symbolArray.join("");
 };
 
-///////////////////////////////////////////////////
-//Adding event listener for the button
+symbolUpdate(word);
+
+///Event listener for guess button
 guessButton.addEventListener("click", function (e) {
-  //preventing defaulting behaviors of form reload
   e.preventDefault();
-  //emtpy text of message element
   message.innerText = "";
-  //grabbing what was entered in the input
   const captureInput = letterInput.value;
+  console.log(captureInput);
+  letterInput.value = "";
 
   const goodGuess = validatePlayerInput(captureInput);
+  console.log(goodGuess);
 
   if (goodGuess) {
     makeGuess(captureInput);
   }
-
-  letterInput.value = "";
 });
 
-//////////////////////////////////////////////////////
-//create a function to check players input
+////function that checks input
+//function #2 - 2nd page of instructions
 const validatePlayerInput = function (input) {
-  //regular expression
   const acceptedLetter = /[a-zA-Z]/;
-  //empty? then add a letter please
   if (input.length === 0) {
-    message.innerText = "Please enter a letter.";
-    //added more than one letter? only 1 letter please.
+    message.innerText = "Enter a letter";
   } else if (input.length > 1) {
-    message.innerText = "Please enter only 1 letter.";
-    //something weird? symbols or character? use accepted letters
+    message.innerText = "Enter only 1 letter.";
   } else if (!input.match(acceptedLetter)) {
-    message.innerText =
-      "Please use only letters, no special symbols or characters, or numbers. This is a word - not quorkle.";
-    //yay! we got what we needed!
+    message.innerText = "please use only letters, no special stuff";
   } else {
     return input;
   }
 };
 
-////////////////////////////////////////////////////////
-//create a function that accepts a letter as a parameter
+///function to capture input
+///function #3 - 2nd page of instructions
 const makeGuess = function (captureInput) {
-  //making all letters uppercase
   captureInput = captureInput.toUpperCase();
-  //check to see if your guessedLetters array already contains that letter.
+
   if (attempts.includes(captureInput)) {
-    message.innerText = "You already used that letter! Try again!";
+    message.innerText = "you already guessed that. try again";
   } else {
     attempts.push(captureInput);
     console.log(attempts);
@@ -100,10 +91,9 @@ const makeGuess = function (captureInput) {
   }
 };
 
-/////////////////////////////////////////////////////
-//create a function to show guessed letters
+///function to show guessed letters
+///function #4 - 3rd page of instructions
 const showGuesses = function () {
-  //empty the innerHTML of the unordered list where the guessed letters will display.
   guessedLetters.innerHTML = "";
   for (const letter of attempts) {
     const li = document.createElement("li");
@@ -112,46 +102,48 @@ const showGuesses = function () {
   }
 };
 
-//////////////////////////////////////////////////////
-//create a function to update the word in progress
+///function to update word in progress
+//function #5 - 3rd page of instructions
 const letterUpdate = function (attempts) {
   const wordUpper = word.toUpperCase();
   const wordArray = wordUpper.split("");
+  console.log(wordArray);
+
   const showLetter = [];
   for (const letter of wordArray) {
     if (attempts.includes(letter)) {
       showLetter.push(letter.toUpperCase());
     } else {
-      showLetter.push("●");
+      showLetter.push("☀️");
     }
   }
-  console.log(showLetter);
   inProgress.innerText = showLetter.join("");
+  console.log(showLetter);
   didTheyWin();
 };
 
-///////////////////////////////////////////////////
-//create a function to count guesses remaining
+////function to count guesses remaining
+//function #7 - 4th page of instructions
 const attemptsLeft = function (captureInput) {
   const upperCaseWord = word.toUpperCase();
   if (!upperCaseWord.includes(captureInput)) {
-    message.innerText = `Nice try. ${captureInput} is not in this word.`;
+    message.innerText = `${captureInput} is not in this word.`;
     remainingGuesses -= 1;
   } else {
-    message.innerText = `Well done! The letter ${captureInput} is in this word.`;
+    message.innerText = `Yes! ${captureInput} is in the word.`;
   }
 
   if (remainingGuesses === 0) {
-    message.innerText = `Game over! The word was ${word}.`;
+    message.innerHTML = `Game Over!. The word was <span class = "highlight">${word}</span>`;
   } else if (remainingGuesses === 1) {
-    remainingSpan.innerText = `${remainingGuesses} guess`;
+    remainingSpan.innerText = `${remainingGuesses} guess.`;
   } else {
     remainingSpan.innerText = `${remainingGuesses} guesses`;
   }
 };
 
-//////////////////////////////////////////////////////
-//create a function to check if the player won
+///function to check if player won
+//function #6 - 3rd page of instructions
 const didTheyWin = function () {
   if (word.toUpperCase() === inProgress.innerText) {
     message.classList.add("win");
