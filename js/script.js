@@ -9,7 +9,7 @@ const message = document.querySelector(".message");
 const playAgainButton = document.querySelector(".play-again");
 
 let word = "magnolia";
-const attempts = [];
+let attempts = [];
 let remainingGuesses = 8;
 
 ///Add an async function
@@ -148,5 +148,34 @@ const didTheyWin = function () {
   if (word.toUpperCase() === inProgress.innerText) {
     message.classList.add("win");
     message.innerHTML = `<p class="highlight">You guessed correct the word! Congrats!</p>`;
+
+    startOver();
   }
 };
+
+///function to hide and show elements
+///function #9 - 4th page of instructions
+const startOver = function () {
+  guessButton.classList.add("hide");
+  remaining.classList.add("hide");
+  guessedLetters.classList.add("hide");
+  playAgainButton.classList.remove("hide");
+};
+
+///add a click event
+//4th page of instructions
+playAgainButton.addEventListener("click", function () {
+  message.classList.remove("win");
+  message.innerText = "";
+  guessedLetters.innerText = "";
+  remainingGuesses = 8;
+  attempts = [];
+  remainingSpan.innerText = `${remainingGuesses} guesses`;
+
+  getWord();
+
+  guessButton.classList.remove("hide");
+  remaining.classList.remove("hide");
+  guessedLetters.classList.remove("hide");
+  playAgainButton.classList.add("hide");
+});
