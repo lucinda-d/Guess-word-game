@@ -19,10 +19,10 @@ const getWord = async function () {
     "https://gist.githubusercontent.com/skillcrush-curriculum/7061f1d4d3d5bfe47efbfbcfe42bf57e/raw/5ffc447694486e7dea686f34a6c085ae371b43fe/words.txt"
   );
   const words = await response.text();
-  console.log(words);
+  // console.log(words);
 
   const wordArray = words.split("\n");
-  console.log(wordArray);
+  // console.log(wordArray);
 
   const randomWordPull = Math.floor(Math.random() * wordArray.length);
   word = wordArray[randomWordPull].trim();
@@ -36,7 +36,7 @@ getWord();
 const symbolUpdate = function (word) {
   const symbolArray = [];
   for (const letter of word) {
-    console.log(letter);
+    // console.log(letter);
     symbolArray.push("☀️");
   }
   inProgress.innerText = symbolArray.join("");
@@ -49,11 +49,11 @@ guessButton.addEventListener("click", function (e) {
   e.preventDefault();
   message.innerText = "";
   const captureInput = letterInput.value;
-  console.log(captureInput);
+  // console.log(captureInput);
   letterInput.value = "";
 
   const goodGuess = validatePlayerInput(captureInput);
-  console.log(goodGuess);
+  // console.log(goodGuess);
 
   if (goodGuess) {
     makeGuess(captureInput);
@@ -84,7 +84,7 @@ const makeGuess = function (captureInput) {
     message.innerText = "you already guessed that. try again";
   } else {
     attempts.push(captureInput);
-    console.log(attempts);
+    // console.log(attempts);
     attemptsLeft(captureInput);
     showGuesses();
     letterUpdate(attempts);
@@ -107,7 +107,7 @@ const showGuesses = function () {
 const letterUpdate = function (attempts) {
   const wordUpper = word.toUpperCase();
   const wordArray = wordUpper.split("");
-  console.log(wordArray);
+  // console.log(wordArray);
 
   const showLetter = [];
   for (const letter of wordArray) {
@@ -118,7 +118,7 @@ const letterUpdate = function (attempts) {
     }
   }
   inProgress.innerText = showLetter.join("");
-  console.log(showLetter);
+  // console.log(showLetter);
   didTheyWin();
 };
 
@@ -134,9 +134,10 @@ const attemptsLeft = function (captureInput) {
   }
 
   if (remainingGuesses === 0) {
-    message.innerHTML = `Game Over!. The word was <span class = "highlight">${word}</span>`;
+    message.innerHTML = `Game Over! The word was <span class = "highlight">${word}</span>`;
+    startOver();
   } else if (remainingGuesses === 1) {
-    remainingSpan.innerText = `${remainingGuesses} guess.`;
+    remainingSpan.innerText = `${remainingGuesses} guess`;
   } else {
     remainingSpan.innerText = `${remainingGuesses} guesses`;
   }
@@ -153,7 +154,7 @@ const didTheyWin = function () {
   }
 };
 
-///function to hide and show elements
+///function to hide and show elements (like the guess button), when the game ends. this will also be used to the show the play again button.
 ///function #9 - 4th page of instructions
 const startOver = function () {
   guessButton.classList.add("hide");
@@ -162,7 +163,7 @@ const startOver = function () {
   playAgainButton.classList.remove("hide");
 };
 
-///add a click event
+///add a click event for the play button to display a new word and restart the guesses back to 8
 //4th page of instructions
 playAgainButton.addEventListener("click", function () {
   message.classList.remove("win");
